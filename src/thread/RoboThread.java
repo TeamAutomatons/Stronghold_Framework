@@ -1,23 +1,23 @@
 package thread;
 
-public class AutomatonThread extends Thread {
+public class RoboThread extends Thread {
 
 	protected boolean interrupted;
 	protected long sleepTime = 30;
 	
-	public AutomatonThread() {
+	public RoboThread() {
 		super();
 		interrupted = false;
 	}
 	
-	protected void AutomatonSleep(long sleepTime) throws AutomatonThreadInterruptedException {
+	protected void AutomatonSleep(long sleepTime) throws RoboThreadInterruptedException {
 		if(interrupted)
-			throw new AutomatonThreadInterruptedException();
+			throw new RoboThreadInterruptedException();
 		
 		try{
 			Thread.sleep(sleepTime);
 		}catch(InterruptedException e){
-			throw new AutomatonThreadInterruptedException();
+			throw new RoboThreadInterruptedException();
 		}		
 	}
 	
@@ -35,14 +35,14 @@ public class AutomatonThread extends Thread {
 				iteration();
 				AutomatonSleep(sleepTime);
 			}
-		}catch(AutomatonThreadInterruptedException e){
+		}catch(RoboThreadInterruptedException e){
 			turnOff();
 			interrupted = false;
 		}
 	}
 
 	protected void turnOn(){}
-	protected void iteration() throws AutomatonThreadInterruptedException {}
+	protected void iteration() throws RoboThreadInterruptedException {}
 	protected void turnOff(){}
 
 }

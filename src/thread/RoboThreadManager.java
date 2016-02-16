@@ -3,13 +3,13 @@ package thread;
 import java.util.Hashtable;
 import java.util.Vector;
 
-public class AutomatonThreadManager {
-	private final static AutomatonThreadManager instance = new AutomatonThreadManager();
+public class RoboThreadManager {
+	private final static RoboThreadManager instance = new RoboThreadManager();
 	private final Hashtable<String, AutomatonThreadGroup> threadGroups = new Hashtable<String, AutomatonThreadGroup>(); // <String, Vector>
 	
-	private AutomatonThreadManager(){}
+	private RoboThreadManager(){}
 	
-	public static AutomatonThreadManager getInstance(){
+	public static RoboThreadManager getInstance(){
 		return instance;
 	}
 	
@@ -29,7 +29,7 @@ public class AutomatonThreadManager {
 		}
 	}
 	
-	public boolean addThread(String groupID, AutomatonThread thread){
+	public boolean addThread(String groupID, RoboThread thread){
 		System.out.printf("Adding %s to %s\n", thread.getName(), groupID);
 		
 		if(!threadGroups.containsKey(groupID)){
@@ -48,7 +48,7 @@ public class AutomatonThreadManager {
 		return true;
 	}
 	
-	public void removeThread(String groupID, AutomatonThread thread){
+	public void removeThread(String groupID, RoboThread thread){
 		if(threadGroups.containsKey(groupID))
 			if(threadGroups.get(groupID).contains(thread))
 				threadGroups.get(groupID).removeElement(thread);
@@ -74,7 +74,7 @@ public class AutomatonThreadManager {
 		}
 	}
 
-	private class AutomatonThreadGroup extends Vector<AutomatonThread> {
+	private class AutomatonThreadGroup extends Vector<RoboThread> {
 		private boolean alive = false;
 		
 		public boolean isAlive(){
