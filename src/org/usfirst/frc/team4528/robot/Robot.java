@@ -19,27 +19,33 @@ public class Robot extends IterativeRobot {
 		 * Create and add modules to 'auto' or 'man' thread groups
 		 ***********************************************************/
 		//For Example,
+		rtm.addThread("auto", new DriveModule());
 		rtm.addThread("man", new DriveModule());
 		
     }
     
     public void disabledInit() {
+    	rtm.interruptThreads("auto");
+    	rtm.interruptThreads("man");
     }
 
     public void autonomousInit() {
-      System.out.println("Default IterativeRobot.autonomousInit() method... Overload me!");
+    	rtm.startThreads("auto");
     }
 
     public void teleopInit() {
-      System.out.println("Default IterativeRobot.teleopInit() method... Overload me!");
+    	rtm.startThreads("man");
     }
     
     public void disabledPeriodic() {
+    	// Meh
     }
     
     public void autonomousPeriodic() {
+    	// Nothing there really to do...
     }
 
     public void teleopPeriodic() {
+    	// Damn these thread taking all our jobs...
     }
 }
