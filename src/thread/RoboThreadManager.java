@@ -5,7 +5,7 @@ import java.util.Vector;
 
 public class RoboThreadManager {
 	private final static RoboThreadManager instance = new RoboThreadManager();
-	private final Hashtable<String, AutomatonThreadGroup> threadGroups = new Hashtable<String, AutomatonThreadGroup>(); // <String, Vector>
+	private final Hashtable<String, RoboThreadGroup> threadGroups = new Hashtable<String, RoboThreadGroup>();
 	
 	private RoboThreadManager(){}
 	
@@ -14,15 +14,20 @@ public class RoboThreadManager {
 	}
 	
 	public boolean createGroup(String groupID){
+		System.out.printf("Creating %s thread group...", groupID);
+		
 		if(threadGroups.containsKey(groupID)){
+			System.err.println("failed!");
 			return false;
 		}else{
-			threadGroups.put(groupID, new AutomatonThreadGroup());
+			threadGroups.put(groupID, new RoboThreadGroup());
+			System.out.println("Success!");
 			return true;
 		}
 	}
 	
 	public void removeGroup(String groupID){
+		System.out.printf("Removing thread group %s...\n", groupID);
 		if(threadGroups.containsKey(groupID)){
 			interruptThreads(groupID);
 			threadGroups.remove(groupID);
@@ -30,17 +35,19 @@ public class RoboThreadManager {
 	}
 	
 	public boolean addThread(String groupID, RoboThread thread){
-		System.out.printf("Adding %s to %s\n", thread.getName(), groupID);
+		System.out.printf("Adding %s to %s...\n", thread.getName(), groupID);
 		
 		if(!threadGroups.containsKey(groupID)){
 			this.createGroup(groupID);
-			System.out.printf("Creating threadGroup %s...\n", groupID);
 		}
 		
-		if(threadGroups.get(groupID).contains(thread))
+		if(threadGroups.get(groupID).contains(thread)){
+			System.out.printf("Thread %s already exists in %s!\n", thread.getName(), groupID);
 			return false;
+		}
 		
 		threadGroups.get(groupID).addElement(thread);
+		
 		if(threadGroups.get(groupID).isAlive() && !thread.isAlive()){
 			thread.start();
 		}
@@ -49,6 +56,7 @@ public class RoboThreadManager {
 	}
 	
 	public void removeThread(String groupID, RoboThread thread){
+		System.out.printf("Removing %s from %s...\n", thread.getName(), groupID);
 		if(threadGroups.containsKey(groupID))
 			if(threadGroups.get(groupID).contains(thread))
 				threadGroups.get(groupID).removeElement(thread);
@@ -66,15 +74,16 @@ public class RoboThreadManager {
 	
 	public boolean interruptThreads(String groupID){
 		
-		if(threadGroups.containsKey(groupID)){
-			System.out.printf("Interrupting all threads in group: %s\n", groupID);
-			return threadGroups.get(groupID).interrupt();
-		}else{
+		if(!threadGroups.containsKey(groupID)){
+			System.err.printf("Thread group %s not found!\n", groupID);
 			return false;
 		}
+		
+		System.out.printf("Interrupting all threads in group %s...\n", groupID);
+		return threadGroups.get(groupID).interrupt();
 	}
 
-	private class AutomatonThreadGroup extends Vector<RoboThread> {
+	private class RoboThreadGroup extends Vector<RoboThread> {
 		private boolean alive = false;
 		
 		public boolean isAlive(){

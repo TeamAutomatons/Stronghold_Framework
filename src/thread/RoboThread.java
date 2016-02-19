@@ -10,6 +10,11 @@ public class RoboThread extends Thread {
 		interrupted = false;
 	}
 	
+	public RoboThread(String name){
+		super(name);
+		interrupted = false;
+	}
+	
 	protected void AutomatonSleep(long sleepTime) throws RoboThreadInterruptedException {
 		if(interrupted)
 			throw new RoboThreadInterruptedException();
@@ -24,11 +29,13 @@ public class RoboThread extends Thread {
 	public void interrupt(){
 		if(isAlive()){
 			interrupted = true;
+//			System.out.printf("Thread %s interrupted!\n", this.getName());
 			super.interrupt();
 		}
 	}
 	
 	public void run(){
+//		System.out.printf("Thread %s started!\n", this.getName());
 		turnOn();
 		try{
 			while(true){
